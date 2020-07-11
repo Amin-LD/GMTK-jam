@@ -4,26 +4,44 @@ using UnityEngine;
 
 public class SecurityCamera : MonoBehaviour
 {
-    public float minAngle = 0;
-    public float maxAngle = 180;
-    private float startTime;
     public Vector3 from = new Vector3(30f, 0f, 90f);
     public Vector3 to = new Vector3(30f, -180f, 90f);
     public float speed = 1.0f;
 
-    private void Start()
+    public bool IsSpotted = false;
+    public float cameraWaitAfterLeaveRange = 5f;
+    private GameObject player;
+
+    private void Awake()
     {
-        startTime = Time.deltaTime;
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void Update()
     {
-        //transform.eulerAngles = new Vector3(transform.eulerAngles.x, Mathf.Lerp(minAngle, maxAngle, Mathf.Sin(Time.deltaTime - startTime)), transform.eulerAngles.z);
+        if (!IsSpotted)
+        {
+            float t = Mathf.PingPong(Time.time * speed * 2.0f, 1.0f);
+            transform.eulerAngles = Vector3.Lerp(from, to, t);
+        }
 
-
-        float t = Mathf.PingPong(Time.time * speed * 2.0f, 1.0f);
-        transform.eulerAngles = Vector3.Lerp(from, to, t);
+        if (IsSpotted)
+        {
+            transform.LookAt(player.transform);
+        }
     }
 
+    public void LeftRange()
+    {
+        Debug.Log("leftRange");
+        Invoke("LeftTimer", cameraWaitAfterLeaveRange);
 
+    }
+    public void LeftTimer()
+    {
+        Debug.Log("leftTimer");
+        IsSpotted = false;
+        transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = transform.GetChild(0).gameObject.GetComponent<LaserBeam>().defaultMaterial;
+        transform.GetChild(1).GetComponent<Light>().color = transform.GetChild(0).gameObject.GetComponent<LaserBeam>().defaultColor;
+    }
 }
