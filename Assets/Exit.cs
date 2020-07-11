@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Gemstone : MonoBehaviour
+public class Exit : MonoBehaviour
 {
     public bool canInteract;
     private GameObject player;
@@ -15,28 +15,25 @@ public class Gemstone : MonoBehaviour
 
     private void Update()
     {
-        if(canInteract && Input.GetKeyDown(KeyCode.E))
+        if (canInteract && Input.GetKeyDown(KeyCode.E) && player.GetComponent<PlayerController>().playerHasObject)
         {
-            transform.parent = player.transform.GetChild(0).transform;
-            transform.localPosition = new Vector3(0.38f, -0.17f, 0.8f);
+            player.GetComponent<PlayerController>().objectivePanel.GetComponentInChildren<TextMeshProUGUI>().text = "YOU WIN";
             player.GetComponent<PlayerController>().triggerPanel.SetActive(false);
-            player.GetComponent<PlayerController>().objectivePanel.GetComponentInChildren<TextMeshProUGUI>().text = "Objective: \n\n Reach the green door";
-            player.GetComponent<PlayerController>().playerHasObject = true;
-            gameObject.GetComponent<Gemstone>().enabled = false;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player")
         {
             canInteract = true;
+            player.GetComponent<PlayerController>().triggerPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Press 'E' to escape";
             player.GetComponent<PlayerController>().triggerPanel.SetActive(true);
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player")
         {
             canInteract = false;
             player.GetComponent<PlayerController>().triggerPanel.SetActive(false);

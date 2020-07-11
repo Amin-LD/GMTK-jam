@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 ccCenter;
     public GameObject triggerPanel;
     public GameObject objectivePanel;
+    public bool playerHasObject = false;
 
     void Awake()
     {
