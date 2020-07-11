@@ -11,6 +11,7 @@ public class LaserBeam : MonoBehaviour
     public Material defaultMaterial;
     public Color spotColor;
     public Color defaultColor;
+    public LayerMask layerMask;
     private void Update()
     {
         if (IsSpotted)
@@ -23,11 +24,20 @@ public class LaserBeam : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            IsSpotted = true;
-            transform.parent.GetComponent<SecurityCamera>().IsSpotted = true;
-            other.gameObject.GetComponent<PlayerController>().triggerPanel.SetActive(true);
-            gameObject.GetComponent<MeshRenderer>().material = spotMaterial;
-            transform.parent.GetChild(1).GetComponent<Light>().color = spotColor;
+            RaycastHit hit;
+            transform.parent.GetChild(1).transform.LookAt(other.gameObject.transform);
+            if (Physics.Raycast(transform.parent.GetChild(1).transform.position, transform.parent.GetChild(1).transform.forward, out hit,30f, layerMask, QueryTriggerInteraction.Collide))
+            {
+               if(hit.transform.gameObject.tag == "Player")
+                {
+                    IsSpotted = true;
+                    transform.parent.GetComponent<SecurityCamera>().IsSpotted = true;
+                    other.gameObject.GetComponent<PlayerController>().triggerPanel.SetActive(true);
+                    gameObject.GetComponent<MeshRenderer>().material = spotMaterial;
+                    transform.parent.GetChild(1).GetComponent<Light>().color = spotColor;
+                }
+            }
+
         }
     }
     private void OnTriggerStay(Collider other)
