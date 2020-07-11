@@ -25,4 +25,5 @@ public class SecurityCamera : MonoBehaviour
         transform.eulerAngles = Vector3.Lerp(from, to, t);
     }
 
+
 }

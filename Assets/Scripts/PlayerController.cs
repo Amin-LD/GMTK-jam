@@ -39,7 +39,8 @@ public class PlayerController : MonoBehaviour
      //CHARACTER CAPSULE
     private float ccHeight;
     private Vector3 ccCenter;
-   public GameObject triggerPanel;
+    public GameObject triggerPanel;
+    public GameObject objectivePanel;
 
     void Awake()
     {
